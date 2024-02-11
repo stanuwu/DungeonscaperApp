@@ -1,11 +1,9 @@
-export default class ApiSession {
-    public readonly name: string;
+export default interface ApiSession {
+    readonly name: string;
 
-    public readonly description: string;
+    readonly description: string;
 
-    public readonly identifier: string;
+    readonly identifier: string;
 
-    public readonly owner: string;
-
-    public readonly websocket: string;
+    readonly owner: string;
 }

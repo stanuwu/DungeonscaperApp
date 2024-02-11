@@ -1,5 +1,5 @@
-export default class ApiIdentity {
-    public readonly name: string;
+export default interface ApiIdentity {
+    readonly name: string;
 
-    public readonly identifier: string;
+    readonly identifier: string;
 }

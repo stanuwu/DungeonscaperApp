@@ -18,12 +18,22 @@ const name = ref('');
 const desc = ref('');
 const id = ref('');
 const join = async () => {
-    store.joinSession(id.value);
+    await store.joinSession(id.value);
+    start();
 };
 
 const create = async () => {
-    store.createSession(name.value, desc.value);
+    await store.createSession(name.value, desc.value);
+    start();
 };
+
+const start = async () => {
+  store.updateUsers();
+}
+
+const kick = async (id: number) => {
+  store.kickUser(id);
+}
 </script>
 
 <template>
@@ -38,6 +48,13 @@ const create = async () => {
             </h4>
             <span>"{{ store.session?.name }}"</span>
             <p>{{ store.session?.description }}</p>
+            <div>
+              <h4>Users:</h4>
+              <div v-for="(user, index) in store.users">
+                <h5>{{user}}</h5>
+                <button v-if="store.isOwner()" @click="kick(index)">Kick</button>
+              </div>
+            </div>
         </div>
         <div v-if="!store.session">
             <h3>Hub View</h3>

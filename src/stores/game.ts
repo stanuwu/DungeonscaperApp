@@ -4,6 +4,7 @@ import axios from 'axios';
 import { defineStore } from 'pinia';
 import type ApiIdentity from '@/api/ApiIdentity';
 import type ApiSession from '@/api/ApiSession';
+import SocketManager from "@/network/SocketManager";
 
 export const useGameStore = defineStore('counter', () => {
     const page = 'http://localhost:5173/';
@@ -11,11 +12,13 @@ export const useGameStore = defineStore('counter', () => {
 
     const identity: Ref<ApiIdentity | undefined> = ref(undefined);
     const session: Ref<ApiSession | undefined> = ref(undefined);
+    const users: Ref<string[]> = ref([]);
 
     const login = async (name: string) => {
         identity.value = (await axios.post<ApiIdentity>('user/get', { name: name })).data;
         axios.defaults.headers.get.Authorization = identity.value?.identifier;
         axios.defaults.headers.post.Authorization = identity.value?.identifier;
+        SocketManager.Instance.Auth(identity.value?.identifier);
     };
 
     const createSession = async (name: string, description: string) => {
@@ -30,5 +33,17 @@ export const useGameStore = defineStore('counter', () => {
         return identity.value?.identifier == session.value?.owner;
     };
 
-    return { page, invite, identity, session, login, createSession, joinSession, isOwner };
+    const setUsers = (u: string[]) => {
+        users.value = u;
+    }
+
+    const updateUsers = () => {
+        SocketManager.Instance.UpdateUsers();
+    }
+
+    const kickUser = (id: number) => {
+        SocketManager.Instance.KickUser(id);
+    }
+
+    return { page, invite, identity, session, users, login, createSession, joinSession, isOwner, setUsers, updateUsers, kickUser };
 });
