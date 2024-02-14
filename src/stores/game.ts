@@ -4,11 +4,11 @@ import axios from 'axios';
 import { defineStore } from 'pinia';
 import type ApiIdentity from '@/api/ApiIdentity';
 import type ApiSession from '@/api/ApiSession';
-import SocketManager from "@/network/SocketManager";
+import SocketManager from '@/network/SocketManager';
 
 export const useGameStore = defineStore('counter', () => {
     const page = 'http://localhost:5173/';
-    let invite: string | undefined = undefined;
+    const invite: string | undefined = undefined;
 
     const identity: Ref<ApiIdentity | undefined> = ref(undefined);
     const session: Ref<ApiSession | undefined> = ref(undefined);
@@ -35,15 +35,28 @@ export const useGameStore = defineStore('counter', () => {
 
     const setUsers = (u: string[]) => {
         users.value = u;
-    }
+    };
 
     const updateUsers = () => {
         SocketManager.Instance.UpdateUsers();
-    }
+    };
 
     const kickUser = (id: number) => {
         SocketManager.Instance.KickUser(id);
-    }
+    };
 
-    return { page, invite, identity, session, users, login, createSession, joinSession, isOwner, setUsers, updateUsers, kickUser };
+    return {
+        page,
+        invite,
+        identity,
+        session,
+        users,
+        login,
+        createSession,
+        joinSession,
+        isOwner,
+        setUsers,
+        updateUsers,
+        kickUser,
+    };
 });
