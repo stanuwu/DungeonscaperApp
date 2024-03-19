@@ -1,6 +1,6 @@
-import { io, Socket } from "socket.io-client";
-import type { ClientToServerEvents, ServerToClientEvents, InterServerEvents, SocketData } from "./Packets";
-import { useGameStore } from "@/stores/game";
+import {io, Socket} from "socket.io-client";
+import type {ClientToServerEvents, InterServerEvents, ServerToClientEvents, SocketData} from "./Packets";
+import {useGameStore} from "@/stores/game";
 import router from "@/router";
 
 export default class SocketManager {
@@ -32,6 +32,12 @@ export default class SocketManager {
         this.socket.on('kick', () => {
             router.push(router.getRoutes().find((r) => r.name == 'home'));
         });
+
+        // Handle Rolls
+        this.socket.on('roll', (roll: any) => {
+            const gameStore = useGameStore();
+            gameStore.addRoll(roll);
+        })
     }
 
     private ReceiveTestPacket(): void {
@@ -52,5 +58,9 @@ export default class SocketManager {
 
     public KickUser(id: number): void {
         this.socket.emit('kickUser', id);
+    }
+
+    public SendRoll(roll: any): void {
+        this.socket.emit('roll', roll);
     }
 }

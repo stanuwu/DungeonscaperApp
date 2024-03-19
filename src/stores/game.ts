@@ -1,7 +1,7 @@
-import type { Ref } from 'vue';
-import { ref } from 'vue';
+import type {Ref} from 'vue';
+import {ref} from 'vue';
 import axios from 'axios';
-import { defineStore } from 'pinia';
+import {defineStore} from 'pinia';
 import type ApiIdentity from '@/api/ApiIdentity';
 import type ApiSession from '@/api/ApiSession';
 import SocketManager from '@/network/SocketManager';
@@ -14,15 +14,18 @@ export const useGameStore = defineStore('counter', () => {
     const session: Ref<ApiSession | undefined> = ref(undefined);
     const users: Ref<string[]> = ref([]);
 
+    let addRoll: Function = (roll: any) => {
+    };
+
     const login = async (name: string) => {
-        identity.value = (await axios.post<ApiIdentity>('user/get', { name: name })).data;
+        identity.value = (await axios.post<ApiIdentity>('user/get', {name: name})).data;
         axios.defaults.headers.get.Authorization = identity.value?.identifier;
         axios.defaults.headers.post.Authorization = identity.value?.identifier;
         SocketManager.Instance.Auth(identity.value?.identifier);
     };
 
     const createSession = async (name: string, description: string) => {
-        session.value = (await axios.post<ApiSession>('user/session', { name: name, description: description })).data;
+        session.value = (await axios.post<ApiSession>('user/session', {name: name, description: description})).data;
     };
 
     const joinSession = async (id: string) => {
@@ -51,6 +54,7 @@ export const useGameStore = defineStore('counter', () => {
         identity,
         session,
         users,
+        addRoll,
         login,
         createSession,
         joinSession,
