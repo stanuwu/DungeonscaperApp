@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from 'vue-router';
+import {createRouter, createWebHistory} from 'vue-router';
 import HomeView from '../views/HomeView.vue';
 
 const router = createRouter({
@@ -23,6 +23,11 @@ const router = createRouter({
             path: '/share/:sessionid',
             name: 'share',
             component: () => import('../views/ShareView.vue'),
+        },
+        {
+            path: '/play',
+            name: 'play',
+            component: () => import('../views/PlayView.vue'),
         },
     ],
 });
